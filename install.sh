@@ -54,12 +54,13 @@ filename="login.txt"
 # Запись логина и пароля в файл в нужном формате
 echo "login = '$login'" > "$filename"
 echo "password = '$password'" >> "$filename"
-chmod 644 "$filename"
+chmod 777 "$filename"
 mv "$filename" src/
 
 # Копирование всех файлов в рабочую папку
 SRC_DIR=$(pwd)
-DEST_DIR="/home/zabbix/scripts/domainprice/"
+DEST_DIR="/home/zabbix/scripts/domainprice"
+mkdir -p "$DEST_DIR"
 cp -r "$SRC_DIR"/* "$DEST_DIR"/
 echo "Все файлы успешно скопированы в $DEST_DIR"
 
@@ -67,7 +68,7 @@ echo "Все файлы успешно скопированы в $DEST_DIR"
 rm -f src/"$filename"
 echo "фаил с логином удален"
 
-python3 "$DEST_DIR"/main.py
+python3 "$DEST_DIR"/main.py 
 
 # Очистка кеша пакетов
 echo "Очистка кеша пакетов..."
