@@ -1,7 +1,7 @@
 import subprocess
 import shutil
 import os
-import time
+# import time
 
 # Путь к папке src
 src_folder = "src"
@@ -18,7 +18,7 @@ scripts = [
 for script in scripts:
     script_path = os.path.join(src_folder, script)
     print(f"Запускаем {script_path}...")
-    subprocess.run(["python", script_path], check=True)
+    subprocess.run(["python3", script_path], check=True)
 
     # Задержка в 5 секунд
     # print("Ожидаем 5 секунд перед запуском следующего скрипта...")
