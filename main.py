@@ -1,10 +1,13 @@
 import subprocess
 import shutil
 import os
-# import time
 
 # Путь к папке src
 src_folder = "src"
+
+# Загружаем домены из blacklist.txt
+blacklist_file = os.path.join(src_folder, "blacklist.txt")
+blacklist = set()
 
 # Список скриптов для последовательного запуска
 scripts = [
@@ -20,20 +23,41 @@ for script in scripts:
     print(f"Запускаем {script_path}...")
     subprocess.run(["python3", script_path], check=True)
 
-    # Задержка в 5 секунд
-    # print("Ожидаем 5 секунд перед запуском следующего скрипта...")
-    # time.sleep(5)
 
-# Перемещение файла end.txt в корневую папку
-end_file_src = os.path.join(src_folder, "end.txt")
-end_file_dest = os.path.join(os.getcwd(), "end.txt")  # Перемещение в корень текущей директории
-
-# Проверяем, существует ли файл end.txt
-if os.path.exists(end_file_src):
-    print(f"Перемещаем {end_file_src} в {end_file_dest}")
-    shutil.move(end_file_src, end_file_dest)
+if os.path.exists(blacklist_file):
+    with open(blacklist_file, "r") as file:
+        blacklist = set(line.strip() for line in file if line.strip())
+    print("Черный список загружен:", blacklist)
 else:
-    print(f"Файл {end_file_src} не найден.")
+    print(f"Файл {blacklist_file} не найден.")
+    exit()
+
+# Чтение end.txt из корневой папки
+end_file_dest = os.path.join(os.getcwd(), "end.txt")
+
+if not os.path.exists(end_file_dest):
+    print("Файл end.txt не найден в корневой папке.")
+    exit()
+
+# Фильтрация доменов в end.txt
+filtered_lines = []
+print("Содержимое end.txt до фильтрации:")
+
+with open(end_file_dest, "r") as end_file:
+    for line in end_file:
+        print(line.strip())  # Диагностический вывод строки из end.txt
+        domain = line.split()[0]  # Получаем первую часть строки как доменное имя
+        if domain in blacklist:
+            print(f"Исключаем домен: {domain} (в черном списке)")
+        else:
+            print(f"Добавляем домен: {domain} (не в черном списке)")
+            filtered_lines.append(line)
+
+# Записываем отфильтрованный результат в end.txt
+with open(end_file_dest, "w") as end_file:
+    end_file.writelines(filtered_lines)
+
+print("\nФайл end.txt обновлен с отфильтрованными доменами.")
 
 # Список JSON-файлов для удаления
 json_files = [
