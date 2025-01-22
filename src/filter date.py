@@ -38,7 +38,7 @@ if data.get("status") == "success" and "result" in data["answer"]:
                 days_until_expire = (date_expire - current_date).days
 
                 # Если осталось менее 30 дней
-                if days_until_expire < 30:
+                if days_until_expire < 60:
                     # Выводим данные в терминал
                     # print(f"fqdn: {fqdn}, date_expire: {date_expire_str}, can_renew: {can_renew}")
                     print(f"До истечения домена {fqdn} осталось {days_until_expire} дней.")
